@@ -5,6 +5,7 @@
 * {
     margin: 0;
     padding: 0;
+	scroll-behavior: smooth;					/* Back to top smoothly */
 }
 
 body {
@@ -207,6 +208,29 @@ article:nth-child(2n) .fade-box a {
 article:nth-child(2n) .fade-box a:hover {
     color: #FFF;
 	background: #B99362;
+}
+
+/* aside */
+aside {
+	position: fixed;
+	right: 30px;
+	bottom: 30px;
+	z-index: 100000;
+}
+
+.totop {
+	width: 60px;
+	height: 60px;
+	background: url(../images/arrow.png) no-repeat;
+	background-size: 100%;
+	background-position: 0px 0px;
+	transition: all 0.5s;
+	-webkit-transition: all 0.5s;
+	cursor: pointer;
+}
+
+.totop:hover {
+	transform: scale(1.3);
 }
 
 /* footer */
