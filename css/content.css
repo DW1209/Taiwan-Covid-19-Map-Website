@@ -107,7 +107,7 @@ nav li a:active {
 
 @keyframes ant {
 	from {										/* First frame settings */
-
+		opacity: 0;
 	} 
 	to {
 		left: 10%;
@@ -127,6 +127,12 @@ article {
 	box-sizing: border-box;
 	margin: 50px 0px 0px;
 	background: rgba(255, 255, 255, .3);
+	transition: all 0.8s;
+	-webkit-transition: all 0.8s;
+}
+
+article:hover {
+	transform: scale(1.02);
 }
 
 article:nth-child(2n) {
@@ -231,7 +237,7 @@ aside {
 }
 
 .totop:hover {
-	transform: scale(1.3);
+	transform: scale(1.2);
 }
 
 /* footer */
