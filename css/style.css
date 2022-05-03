@@ -109,6 +109,7 @@ hr {
     text-decoration: none;
     font-size: 35px;
     padding: 10px 50px;
+    border-radius: 30px;
     transition: background 0.5s, color 0.8s;
     -webkit-transition: background 0.5s, color 0.8s;
 }
@@ -131,4 +132,31 @@ hr {
 .button #more:hover {
     background-color: #222;
     color: #B99362;
+}
+
+.slide-left {
+    animation-name: slideleft;
+	animation-duration: 2s;
+	animation-iteration-count: 1;
+	animation-timing-function: ease;
+	animation-direction: normal;
+	animation-fill-mode: forwards;
+	
+	-webkit-animation-name: slideleft;			/* Animation Name */
+	-webkit-animation-duration: 2s;				/* Animation Duration */
+	-webkit-animation-iteration-count: 1;		/* Animation Iteration */
+	-webkit-animation-timing-function: ease;	/* Animation starts and ends slowly */
+	-webkit-animation-direction: normal;		/* Animation Direction is normal */
+	-webkit-animation-fill-mode: forwards;		/* Stop at the last frame after animation, needed to be used with direction */
+}
+
+@keyframes slideleft {
+    from {
+        transform: translate(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translate(0px);
+        opacity: 1;
+    }
 }
