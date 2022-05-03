@@ -94,7 +94,6 @@ nav li a:active {
 	animation-duration: 3s;
 	animation-iteration-count: 1;
 	animation-timing-function: ease;
-	animation-delay: 1s;
 	animation-direction: normal;
 	animation-fill-mode: forwards;
 	
@@ -102,7 +101,6 @@ nav li a:active {
 	-webkit-animation-duration: 3s;				/* Animation Duration */
 	-webkit-animation-iteration-count: 1;		/* Animation Iteration */
 	-webkit-animation-timing-function: ease;	/* Animation starts and ends slowly */
-	-webkit-animation-delay: 1s;				/* Animation delay for 1 second */
 	-webkit-animation-direction: normal;		/* Animation Direction is normal */
 	-webkit-animation-fill-mode: forwards;		/* Stop at the last frame after animation, needed to be used with direction */
 }
