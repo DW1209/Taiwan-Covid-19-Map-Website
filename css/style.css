@@ -84,14 +84,22 @@ section {
 }
 
 hr {
-    margin-top: 20px;
+    float: left;
+    margin-top: 50px;
     width: 30%;
+}
+
+.title p {
+    float: left;
+    margin-top: 35px;
+    font-size: 0.5em;
+    padding: 0px 22px;
 }
 
 /* button */
 .button {
     left: 60%;
-    top: 70%;
+    top: 75%;
 }
 
 .button ul {
