@@ -46,8 +46,9 @@ if __name__ == '__main__':
     period_time = current_time - modification_time
     
     if period_time >= 7200.0:
+        os.remove(filename)
         url = 'https://nidss.cdc.gov.tw' + get_datas_url()
-        download_datas(url)
+        download_datas(url, filename)
 
     records = parse_datas(filename)
     print(records)
