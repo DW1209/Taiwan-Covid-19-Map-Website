@@ -1,6 +1,4 @@
-import os
 import wget
-import time
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
@@ -32,23 +30,3 @@ def parse_datas(filename):
         records[name] = number
 
     return records
-
-
-if __name__ == '__main__':
-    filename = 'covid19.ods'
-
-    if os.path.exists(filename) == False:
-        url = 'https://nidss.cdc.gov.tw' + get_datas_url()
-        download_datas(url, filename)
-
-    current_time = float(time.time())
-    modification_time = float(os.path.getmtime(filename))
-    period_time = current_time - modification_time
-    
-    if period_time >= 7200.0:
-        os.remove(filename)
-        url = 'https://nidss.cdc.gov.tw' + get_datas_url()
-        download_datas(url, filename)
-
-    records = parse_datas(filename)
-    print(records)
