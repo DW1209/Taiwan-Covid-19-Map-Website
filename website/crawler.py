@@ -1,4 +1,7 @@
+import os
+import re
 import wget
+import time
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
@@ -38,21 +41,28 @@ area_map = {
 }
 
 
-def get_datas_url():
+def web_crawling(patients_filename, ranges_filename):
     response = requests.get(
         url='https://nidss.cdc.gov.tw/nndss/DiseaseMap?id=19CoV',
         headers={ 'user-agent': UserAgent().random }
     )
     soup = BeautifulSoup(response.text, 'html.parser')
-    target = soup.find('a', id='ExcelByArea')
-    return target['href']
-    
 
-def download_datas(url, filename):
-    _ = wget.download(url, filename)
+    url = 'https://nidss.cdc.gov.tw' + soup.find('a', id='ExcelByArea')['href']
+    store_patients_datas(url, patients_filename)
+    records = parse_patients_datas(patients_filename)
+
+    regex = re.compile(r'"dataClasses".*"regionName')
+    target = str(soup.find("div", id='appendContainer'))
+    ranges = eval(str(regex.search(target).group(0))[14:-12])
+    ranges = read_ranges_datas(ranges)
+    store_ranges_datas(ranges, ranges_filename)
+    ranges = parse_ranges_datas(ranges_filename)
+
+    return records, ranges
 
 
-def parse_datas(filename):
+def parse_patients_datas(filename):
     records = dict()
 
     datas = pd.read_excel(filename, engine='odf', skiprows=8, header=None)
@@ -63,3 +73,51 @@ def parse_datas(filename):
         records[area_map[area]] = number
 
     return records
+
+
+def read_ranges_datas(ranges):
+    df = pd.DataFrame()
+    df['from'] = [dict(value)['from'] for value in ranges]
+    df['to'] = [dict(value)['to'] for value in ranges]
+    return df
+
+
+def parse_ranges_datas(filename):
+    ranges = dict()
+    datas = pd.read_csv(filename, sep=',', encoding='utf-8')
+
+    for i in range(len(datas)):
+        ranges[i + 1] = {"from": int(datas['from'][i]), "to": int(datas['to'][i])}
+
+    return ranges
+
+
+def store_patients_datas(url, filename):
+    _ = wget.download(url, filename)
+
+
+def store_ranges_datas(ranges, filename):
+    ranges.to_csv(filename, sep=',', encoding='utf-8')
+
+
+def get_records_and_ranges():
+    patients_filename, ranges_filename = 'covid19.ods', 'ranges.csv'
+
+    if os.path.exists(patients_filename) == False or os.path.exists(ranges_filename) == False:
+        records, ranges = web_crawling(patients_filename, ranges_filename)
+        return records, ranges
+
+    current_time = float(time.time())
+    modification_time = float(os.path.getmtime(patients_filename))
+    period_time = current_time - modification_time
+    
+    if period_time >= 7200.0:
+        os.remove(ranges_filename)
+        os.remove(patients_filename)
+        records, ranges = web_crawling(patients_filename, ranges_filename)
+        return records, ranges
+    
+    ranges = parse_ranges_datas(ranges_filename)
+    records = parse_patients_datas(patients_filename)
+
+    return records, ranges
