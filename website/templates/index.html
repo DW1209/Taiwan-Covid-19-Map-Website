@@ -70,7 +70,7 @@
                     </a>
 
                     <!-- Chiayi City -->
-                    <a id="Chaiyi-City" xlink:href="#" class="level2">
+                    <a id="Chiayi-City" xlink:href="#" class="level2">
                         <path id="Chaiyi-City" data-name="Chiayi-City" d="M243.1,445l.34,2.24,2.07,2.07-1.38,3.1,6.9,1,.69,1.9,1.38,1.9,1.72.86,1.72-1,.86-1.72,3.1-2.41,1.38,1.21,3.1,1,.52-1.72,2.41-2.93-1.38-1.38L266,447.1l-2.07-.52-.86-1.72-1.55-1-1.9.69-1.38-1.21-1.21-1.72-1.72-.86-2.07.52-4.83,3.45-2.07-.52-3.28.86h0Z" />
                     </a>
 
@@ -180,9 +180,10 @@
         <!-- Javascript -->
         <script>
             $('a').mouseenter(function() {
-                var area = (this.id).replace('-', ' ')
-                var info = JSON.parse('{{ records | tojson | safe }}');
-                document.getElementById("info").innerHTML = '<h2>' + area + '</h2>';
+                var area = (this.id).replaceAll('-', ' ')
+                var records = JSON.parse('{{ records | tojson | safe }}');
+                var info = '<h2>' + area + '</h2><h3>' + records[area] + '</h3>'
+                document.getElementById("info").innerHTML = info;
             });
         </script>
     </body>
