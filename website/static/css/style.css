@@ -26,7 +26,6 @@ body {
 section {
     position: relative;
     margin: 20px auto 30px;     /* Top, Horizontal and Bottom */
-    height: 580px;
 }
 
 .tw-map, .title, .button {
@@ -36,7 +35,7 @@ section {
 
 /* tw-map */
 .tw-map {
-    top: 5%;
+    top: 10px;
     width: 32%;
     margin-left: 10%;
 }
@@ -74,10 +73,10 @@ section {
 
 /* title */
 .title {
-    left: 60%;
-    top: 20%;
+    left: 58%;
+    margin-top: 60px;
     color: white;
-    font-size: 50px;
+    font-size: max(2.3 * (2vw + 1vh) / 2, 2.2em);
 }
 
 .title .special {
@@ -85,6 +84,15 @@ section {
 }
 
 hr {
-    margin: 30px 0;
+    margin: 30px 0px;
     width: 30%;
+}
+
+.title h2 {
+    font-size: max(1 * (2vw + 1vh) / 2, 0.8em);
+    margin-bottom: 40px;
+}
+
+.title h3 {
+    font-size: max(1.9 * (2vw + 1vh) / 2, 1.5em);
 }

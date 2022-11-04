@@ -1,7 +1,7 @@
 $('a').mouseenter(function() {
     var area = (this.id).replaceAll('-', ' ')
     var patients = records[area]
-    var info = '<h2>' + area + '</h2><h3>' + patients + '</h3>'
+    var info = '<h2>' + area + '</h2><h3 class="special">' + patients + '</h3>'
     document.getElementById("info").innerHTML = info;
 
     for (var key of Object.keys(ranges)) {

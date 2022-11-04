@@ -170,8 +170,7 @@
 
             <!-- Title -->
             <div class="title">
-                <h1>Taiwan</h1>
-                <h1><span class="special">COVID-19</span> Map</h1>
+                <h1>Taiwan<br><span class="special">COVID-19</span> Map</h1>
                 <hr />
                 <div id="info"></div>
             </div>
@@ -179,7 +178,7 @@
     
         <!-- Javascript -->
         <script>
-            var ranges  = JSON.parse('{{ ranges | tojson | safe }}');
+            var ranges  = JSON.parse('{{  ranges | tojson | safe }}');
             var records = JSON.parse('{{ records | tojson | safe }}');
         </script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
