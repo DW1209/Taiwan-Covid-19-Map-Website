@@ -9,5 +9,9 @@ $('a').mouseenter(function() {
             document.getElementById(this.id).classList.add("level" + key);
             break;
         }
+        if (key == 5 && ranges[key]["to"] < patients) {
+            document.getElementById(this.id).classList.add("level" + key);
+            break;
+        }
     }
 });
