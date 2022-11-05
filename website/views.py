@@ -1,5 +1,3 @@
-import os
-import time
 from .crawler import *
 from flask import Blueprint, render_template
 
