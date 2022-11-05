@@ -1,4 +1,4 @@
-# Taiwan Covid-19 Website
+# Taiwan Covid-19 Map Website
 
 ### Description
 ![main page](https://i.imgur.com/8j3LWAB.jpg)
