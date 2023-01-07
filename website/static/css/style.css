@@ -40,37 +40,6 @@ section {
     margin-left: 10%;
 }
 
-.tw-map path {
-    stroke: #77909E;
-    transition: fill 0.8s;
-    -webkit-transition: fill 0.8s;
-}
-
-.tw-map .level1:hover {
-    fill: #FFEEB5;
-    cursor: pointer;
-}
-
-.tw-map .level2:hover {
-    fill: #F2CA74;
-    cursor: pointer;
-}
-
-.tw-map .level3:hover {
-    fill: #DBA14B;
-    cursor: pointer;
-}
-
-.tw-map .level4:hover {
-    fill: #E88223;
-    cursor: pointer;
-}
-
-.tw-map .level5:hover {
-    fill: #A83E00;
-    cursor: pointer;
-}
-
 /* title */
 .title {
     left: 58%;
