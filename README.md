@@ -1,17 +1,19 @@
 # Taiwan Covid-19 Map Website
 
-### Description
-![main page](https://i.imgur.com/8j3LWAB.jpg)
+## Description
+![website](./figures/website.jpg)
 
-### Installation
-```console
+## Installation
+```bash
 $ pip install -r requirements.txt
 ```
 
-### Execution
-```console
-$ python main.py # Open the browser and enter http://127.0.0.1:2000
+## Usage
+Start running the website via the command below.
+```bash
+$ python main.py
 ```
+Open the web broswer and enter http://127.0.0.1:2000.
 
-### References
+## References
 - Icons: https://www.flaticon.com/
