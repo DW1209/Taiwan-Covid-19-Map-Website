@@ -1,6 +1,7 @@
 import os
 import re
-import wget
+import csv
+import json
 import time
 import requests
 import pandas as pd
@@ -9,47 +10,46 @@ from fake_useragent import UserAgent
 
 
 area_map = {
-    "台北市": "Taipei City",
-    "基隆市": "Keelung City",
-    "新北市": "New Taipei City",
-    "宜蘭縣": "Yilan County",
-    "金門縣": "Kinmen County",
-    "連江縣": "Lienchiang County",
-    "新竹市": "Hsinchu City",
-    "桃園市": "Taoyuan City",
-    "新竹縣": "Hsinchu County",
-    "苗栗縣": "Miaoli County",
-    "台中市": "Taichung City",
-    "彰化縣": "Chuanghua County",
-    "南投縣": "Nantou County",
-    "台南市": "Tainan City",
-    "嘉義市": "Chiayi City",
-    "雲林縣": "Yunlin County",
-    "嘉義縣": "Chiayi County",
-    "高雄市": "Kaohsiung City",
-    "屏東縣": "Pingtung County",
-    "澎湖縣": "Penghu County",
-    "花蓮縣": "Huanlien County",
-    "台東縣": "Taitung County",
-    "北區合計": "North Zone Count",
-    "中區合計": "Center Zone Count",
-    "南區合計": "South Zone Count",
-    "東區合計": "East Zone Count",
-    "高屏區合計": "Kaoshiung Pingtung Zone Count",
-    "台北區合計": "Taipei Zone Count",
-    "合計": "Total Count",
+    '台北市': 'Taipei City',
+    '基隆市': 'Keelung City',
+    '新北市': 'New Taipei City',
+    '宜蘭縣': 'Yilan County',
+    '金門縣': 'Kinmen County',
+    '連江縣': 'Lienchiang County',
+    '新竹市': 'Hsinchu City',
+    '桃園市': 'Taoyuan City',
+    '新竹縣': 'Hsinchu County',
+    '苗栗縣': 'Miaoli County',
+    '台中市': 'Taichung City',
+    '彰化縣': 'Chuanghua County',
+    '南投縣': 'Nantou County',
+    '台南市': 'Tainan City',
+    '嘉義市': 'Chiayi City',
+    '雲林縣': 'Yunlin County',
+    '嘉義縣': 'Chiayi County',
+    '高雄市': 'Kaohsiung City',
+    '屏東縣': 'Pingtung County',
+    '澎湖縣': 'Penghu County',
+    '花蓮縣': 'Huanlien County',
+    '台東縣': 'Taitung County',
+    '總計': 'Total Count'
 }
 
 
 def web_crawling(patients_filename, ranges_filename):
     response = requests.get(
-        url='https://nidss.cdc.gov.tw/nndss/DiseaseMap?id=19CoV',
+        url='https://nidss.cdc.gov.tw/nndss/DiseaseMap?id=19CVS',
         headers={ 'user-agent': UserAgent().random }
     )
     soup = BeautifulSoup(response.text, 'html.parser')
 
-    url = 'https://nidss.cdc.gov.tw' + soup.find('a', id='ExcelByArea')['href']
-    store_patients_datas(url, patients_filename)
+    content = soup.find('script', string=lambda x: x and 'hmJson.push(' in x).string
+    sidx = content.find('hmJson.push(') + len('hmJson.push(')
+    eidx = content.find(');', sidx)
+    content = content[sidx:eidx].strip()
+    data = json.loads(content)
+    records = read_patients_datas(data)
+    store_patients_datas(records, patients_filename)
     records = parse_patients_datas(patients_filename)
 
     regex = re.compile(r'"dataClasses".*"regionName')
@@ -62,16 +62,19 @@ def web_crawling(patients_filename, ranges_filename):
     return records, ranges
 
 
+def read_patients_datas(data):
+    records = dict()
+    for entry in data['series']:
+        area, number = entry['code'], entry['value']
+        records[area_map[area]] = number
+    return records
+
+
 def parse_patients_datas(filename):
     records = dict()
-
-    datas = pd.read_excel(filename, engine='odf', skiprows=8, header=None)
-    datas.drop(datas.tail(1).index, inplace=True)
-
+    datas = pd.read_csv(filename, sep=',', encoding='utf-8')
     for i in range(len(datas)):
-        area, number = datas[0][i], datas[1][i]
-        records[area_map[area]] = number
-
+        records[datas['Area'][i]] = int(datas['Number'][i])
     return records
 
 
@@ -85,15 +88,17 @@ def read_ranges_datas(ranges):
 def parse_ranges_datas(filename):
     ranges = dict()
     datas = pd.read_csv(filename, sep=',', encoding='utf-8')
-
     for i in range(len(datas)):
         ranges[i + 1] = {"from": int(datas['from'][i]), "to": int(datas['to'][i])}
-
     return ranges
 
 
-def store_patients_datas(url, filename):
-    _ = wget.download(url, filename)
+def store_patients_datas(records, filename):
+    with open(filename, 'w', newline='', encoding='utf-8') as f:
+        writer = csv.writer(f)
+        writer.writerow(['Area', 'Number'])
+        for area, number in records.items():
+            writer.writerow([area, number])
 
 
 def store_ranges_datas(ranges, filename):
@@ -101,9 +106,11 @@ def store_ranges_datas(ranges, filename):
 
 
 def get_records_and_ranges():
-    patients_filename, ranges_filename = 'covid19.ods', 'ranges.csv'
+    base = os.path.dirname(__file__)
+    ranges_filename = os.path.join(base, 'ranges.csv')
+    patients_filename = os.path.join(base, 'covid19.csv')
 
-    if os.path.exists(patients_filename) == False or os.path.exists(ranges_filename) == False:
+    if not os.path.exists(patients_filename) or not os.path.exists(ranges_filename):
         records, ranges = web_crawling(patients_filename, ranges_filename)
         return records, ranges
 
@@ -115,9 +122,8 @@ def get_records_and_ranges():
         os.remove(ranges_filename)
         os.remove(patients_filename)
         records, ranges = web_crawling(patients_filename, ranges_filename)
-        return records, ranges
-    
-    ranges = parse_ranges_datas(ranges_filename)
-    records = parse_patients_datas(patients_filename)
+    else:
+        ranges = parse_ranges_datas(ranges_filename)
+        records = parse_patients_datas(patients_filename)
 
     return records, ranges
