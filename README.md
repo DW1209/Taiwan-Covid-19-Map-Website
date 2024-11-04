@@ -13,7 +13,7 @@ Start running the website via the command below.
 ```bash
 $ python main.py
 ```
-Open the web broswer and enter http://127.0.0.1:2000.
+Open the web broswer and enter http://127.0.0.1:18018.
 
 ## References
 - Icons: https://www.flaticon.com/
